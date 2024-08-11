@@ -1,0 +1,26 @@
+#####
+The packages needed for this config to work 
+
+
+sudo pacman -S xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen
+
+Then copy the files inside the config folder to .config folder
+Also Open the .config/polybar/scripts
+
+Copy the files from the usr/bin to /usr/bin
+Then extract the fonts.tar.gz to the /usr/share/fonts/ 
+
+##Optional Icons,themes,
+Extract the themes theme,Icons to /usr/share/icons ,/usr/share/themes
+
+###Lcokscreeen Rofi
+Copy the cache dirs files to .cache dir
+
+##For the Brightness module to work
+Then open the etc/udev/rules.d/90-backlight.rules with your text editor and replace username with your linux username
+
+###Optional If you want to replace bash with zsh follow this
+sudo pacman -S zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
+copy the zsh to home directory
+
+Now Reboot and enjoy
