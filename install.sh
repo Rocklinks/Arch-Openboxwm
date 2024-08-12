@@ -10,36 +10,23 @@ if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman-key --lsign-key 3056513887B78AEB
     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-    sudo pacman -Syu
+    sudo pacman -Syu --noconfirm 
 fi
 
-sudo pacman -S xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
+sudo pacman -S --noconfirm xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
 
-cd cache
-sudo cp * ~/.cache/ -rf
-cd ..
+sudo cp cache/* $HOME/.cache/ -rf
+sudo cp etc/udev/90-backlight.rules /etc/udev/rules.d/
 
+sudo cp usr/bin/networkmanager_dmenu /usr/bin/
+cd chmod +x /usr/bin/networkmanager_dmenu
 
-cd udev/rules.d/
-sudo cp 90-backlight.rules /etc/udev/rules.d/
-cd ../../
+sudo cp zsh/ $HOME/
 
-cd usr/bin
-sudo chmod +x networkmanager_dmenu
-sudo cp networkmanager_dmenu /usr/bin/
-cd ../../
+sudo cp config/* $HOME/.config/ -rf 
+sudo chmod +x $HOME/.config/polybar/scripts/*
 
-cd zsh
-sudo cp .bash .zsh
-~/$HOME 
-cd ..
-
-sudo cp config/* ~/.config/ -rf
-cd ~/.config/polybar/scripts/ 
-sudo chmod +x *
-cd ..
-
-cd fonts
-tar -xzvf fonts.tar.gz
-sudo mv fonts/* /usr/share/fonts/ -rf
+tar -xzvf font/fonts.tar.gz
+sudo mv fonts/fonts/* /usr/share/fonts/ -rf
 sudo fc-cache -fv
+
