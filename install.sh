@@ -25,6 +25,7 @@ sudo chmod +x /usr/bin/networkmanager_dmenu
 sudo cp config/* $HOME/.config/ -rf 
 sudo chmod +x $HOME/.config/polybar/scripts/*
 
+mkdir -p Fonts
 tar -xzvf Fonts.tar.gz -C Fonts
 sudo cp Fonts/ /usr/share/fonts/ -rf
 sudo fc-cache -fv
