@@ -37,7 +37,10 @@ sudo cp zsh/.zshrc $HOME
 
 sudo chown root:$(id -gn) $HOME/.cache/betterlockscreen
 sudo chmod 750 $HOME/.cache/betterlockscreen
-
+### WIFI ###
+CONFIG="$HOME/.config/polybar/system.ini"
+WIFI=$(ip link | awk '/state UP/ {print $2}' | tr -d :)
+sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$CONFIG"
 
 
 
