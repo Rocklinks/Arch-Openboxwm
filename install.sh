@@ -35,7 +35,8 @@ tar -xzvf zsh.tar.gz -C zsh
 sudo cp .bashrc $HOME
 sudo cp .zshrc $HOME
 
-
+sudo chown root:root $HOME~/.cache/betterlockscreen
+sudo chmod 700 $HOME~/.cache/betterlockscreen
 
 
 
