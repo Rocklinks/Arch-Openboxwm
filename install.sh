@@ -32,11 +32,11 @@ sudo fc-cache -fv
 
 mkdir - zsh
 tar -xzvf zsh.tar.gz -C zsh
-sudo cp .bashrc $HOME
-sudo cp .zshrc $HOME
+sudo cp zsh/.bashrc $HOME
+sudo cp zsh/.zshrc $HOME
 
-sudo chown root:root $HOME~/.cache/betterlockscreen
-sudo chmod 700 $HOME~/.cache/betterlockscreen
+sudo chown root:root $HOME/.cache/betterlockscreen
+sudo chmod 700 $HOME/.cache/betterlockscreen
 
 
 
