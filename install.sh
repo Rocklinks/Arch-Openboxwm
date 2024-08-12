@@ -27,6 +27,6 @@ sudo chmod +x $HOME/.config/polybar/scripts/*
 
 mkdir -p Fonts
 tar -xzvf Fonts.tar.gz -C Fonts
-sudo cp Fonts/ /usr/share/fonts/ -rf
+sudo mv -R Fonts/ /usr/share/fonts/ 
 sudo fc-cache -fv
 
