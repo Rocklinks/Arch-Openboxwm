@@ -13,7 +13,7 @@ if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman -Syu
 fi
 
-sudo pacman -S xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen
+sudo pacman -S xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
 
 cd cache
 sudo cp * ~/.cache/ -rf
@@ -22,19 +22,20 @@ cd ..
 
 cd udev/rules.d/
 sudo cp 90-backlight.rules /etc/udev/rules.d/
+cd ../../
 
 cd usr/bin
 sudo chmod +x networkmanager_dmenu
 sudo cp networkmanager_dmenu /usr/bin/
-cd ..
+cd ../../
 
 cd zsh
 sudo cp .bash .zsh
 ~/$HOME 
 cd ..
 
-sudo cp config/* ~/.config/
-cd ~/.config/polybar/scripts/
+sudo cp config/* ~/.config/ -rf
+cd ~/.config/polybar/scripts/ 
 sudo chmod +x *
 cd ..
 
@@ -42,5 +43,3 @@ cd fonts
 tar -xzvf fonts.tar.gz
 sudo mv fonts/* /usr/share/fonts/ -rf
 sudo fc-cache -fv
-
-
