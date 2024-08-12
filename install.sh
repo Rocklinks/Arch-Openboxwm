@@ -19,13 +19,13 @@ sudo cp cache/* $HOME/.cache/ -rf
 sudo cp udev/rules.d/90-backlight.rules /etc/udev/rules.d/
 
 sudo cp usr/bin/networkmanager_dmenu /usr/bin/
-cd chmod +x /usr/bin/networkmanager_dmenu
+sudo chmod +x /usr/bin/networkmanager_dmenu
 
 
 sudo cp config/* $HOME/.config/ -rf 
 sudo chmod +x $HOME/.config/polybar/scripts/*
 
-tar -xzvf fonts/Fonts.tar.gz
-sudo mv fonts/fonts/* /usr/share/fonts/ -rf
+tar -xzvf Fonts.tar.gz
+sudo mv fonts/ /usr/share/fonts/ -rf
 sudo fc-cache -fv
 
