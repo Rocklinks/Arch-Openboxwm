@@ -30,7 +30,7 @@ tar -xzvf Fonts.tar.gz -C Fonts
 sudo cp -R Fonts/ /usr/share/fonts/ 
 sudo fc-cache -fv
 
-mkdir - zsh
+mkdir -p zsh
 tar -xzvf zsh.tar.gz -C zsh
 sudo cp zsh/.bashrc $HOME
 sudo cp zsh/.zshrc $HOME
