@@ -8,9 +8,7 @@
 # Version: v1
 ############################
 
-set -x 
-set -e
-set -o pipefail
+set -exo  pipefail
 #Check if yay is installed
 if ! command -v yay &> /dev/null; then
     sudo pacman -S yay
