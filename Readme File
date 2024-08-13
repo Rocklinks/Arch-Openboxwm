@@ -1,4 +1,8 @@
-#####
+### Automated  Install using the script ###
+For Automated installs just use the script install.sh
+This only installs the Fonts not the Themes and icons
+
+##### Manual Installation
 The packages needed for this config to work 
 
 
