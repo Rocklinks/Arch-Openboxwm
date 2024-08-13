@@ -13,7 +13,7 @@ if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman -Syu --noconfirm 
 fi
 
-sudo pacman -S --noconfirm xfce4-panel xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
+sudo pacman -S --noconfirm xfce4-panel polkit-gnome xfdesktop xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
 
 sudo cp cache/* $HOME/.cache/ -rf
 sudo cp udev/rules.d/90-backlight.rules /etc/udev/rules.d/
@@ -38,7 +38,7 @@ sudo cp zsh/.zshrc $HOME
 sudo chown root:$(id -gn) $HOME/.cache/betterlockscreen
 sudo chmod 750 $HOME/.cache/betterlockscreen
 
-sudo chown -R $(id -gn):root "$HOME/.config"
+sudo chown -R root:$(id -gn) "$HOME/.config"
 chmod -R 770 "$HOME/.config"
 
 ### WIFI ###
