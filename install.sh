@@ -1,4 +1,16 @@
 #!/bin/bash
+########################
+# Author: Rocklin K S
+# Date: 13/08/2024
+#
+# This script outputs the helath
+#
+# Version: v1
+############################
+
+set -x 
+set -e
+set -o pipefail
 #Check if yay is installed
 if ! command -v yay &> /dev/null; then
     sudo pacman -S yay
