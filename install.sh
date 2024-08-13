@@ -58,4 +58,18 @@ sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$CONFIG
 brightness=$(ls -1 /sys/class/backlight/)
 sed -i "s/sys_graphics_card = intel_backlight/sys_graphics_card = $brightness/" "$CONFIG"
 
+## Find if my uses the wifi or ethernet
+
+CONFIG="$HOME/.config/polybar/config.ini"
+
+ETHERNET=$(ip link | awk '/state UP/ {print $2}' | tr -d :)
+WIFI=$(ip link | awk '/state UP/ {print $2}' | tr -d : | grep -i '^wl')
+
+if [ -n "$WIFI" ]; then
+    :
+elif [ -n "$ETHERNET" ]; then
+    sed -i "s/network/ethernet/" "$CONFIG"
+fi
+
+
 
