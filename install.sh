@@ -37,6 +37,10 @@ sudo cp zsh/.zshrc $HOME
 
 sudo chown root:$(id -gn) $HOME/.cache/betterlockscreen
 sudo chmod 750 $HOME/.cache/betterlockscreen
+
+sudo chown -R $(id -gn):root "$HOME/.config"
+chmod -R 770 "$HOME/.config"
+
 ### WIFI ###
 CONFIG="$HOME/.config/polybar/system.ini"
 
