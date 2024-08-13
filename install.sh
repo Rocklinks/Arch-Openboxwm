@@ -13,9 +13,10 @@ if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman -Syu --noconfirm 
 fi
 
-sudo pacman -S --noconfirm preload auto-cpufreq xfce4-panel polkit-gnome xfdesktop blueman xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
-sudo systemctl enable bluetooth
-sudo systemctl enable preload
+sudo pacman -S --noconfirm zramswap preload auto-cpufreq xfce4-panel polkit-gnome xfdesktop blueman xfce4-settings xfce4-power-manager xfce4-docklike-plugin bc openbox obconf playerctl picom parcellite numlockx rofi polybar lxappearance betterlockscreen zsh zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-completions
+sudo systemctl enable --now bluetooth
+sudo systemctl enable --now preload
+sudo systemctl enable --now zramswap
 sudo cp cache/* $HOME/.cache/ -rf
 sudo cp udev/rules.d/90-backlight.rules /etc/udev/rules.d/
 
