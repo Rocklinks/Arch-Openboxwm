@@ -39,6 +39,14 @@ sudo chown root:$(id -gn) $HOME/.cache/betterlockscreen
 sudo chmod 750 $HOME/.cache/betterlockscreen
 ### WIFI ###
 CONFIG="$HOME/.config/polybar/system.ini"
+
+if [ ! -f "$CONFIG" ]; then
+    echo "Creating configuration file at $CONFIG"
+    mkdir -p "$HOME/.config/polybar"
+    echo "[settings]" > "$CONFIG"
+    echo "sys_network_interface = wlan0" >> "$CONFIG"
+fi
+
 WIFI=$(ip link | awk '/state UP/ {print $2}' | tr -d :)
 sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$CONFIG"
 brightness=$(ls -1 /sys/class/backlight/)
