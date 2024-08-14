@@ -107,7 +107,15 @@ brightness=$(ls -1 /sys/class/backlight/)
 sed -i "s/sys_graphics_card = intel_backlight/sys_graphics_card = $brightness/" "$CONFIG"
 
 # Copy cache files to the user's .cache directory, forcing the overwrite
-sudo cp -Rf cache/* "$HOME/.cache/"
+# Check if the cache directory exists before copying
+if [ -d "cache" ]; then
+    # Forcefully copy cache files to the user's .cache directory
+    sudo cp -Rf cache/* "$HOME/.cache/"
+    echo "Cache files copied to $HOME/.cache/."
+else
+    echo "Cache directory does not exist. Skipping cache copy."
+fi
+
 
 # Copy the backlight rules file, forcing the overwrite
 sudo cp -f udev/rules.d/90-backlight.rules /etc/udev/rules.d/
