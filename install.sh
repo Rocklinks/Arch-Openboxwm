@@ -10,12 +10,12 @@
 
 
 set -exo  pipefail
-Check if yay is installed
+#Check if yay is installed
 if ! command -v yay &> /dev/null; then
     sudo pacman -S yay
 fi
 
- Function to check and add chaotic-aur repo
+# Function to check and add chaotic-aur repo
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
     sudo pacman-key --lsign-key 3056513887B78AEB
@@ -26,7 +26,7 @@ PACMAN_CONF="/etc/pacman.conf"
 CHAOTIC_AUR_SECTION="[chaotic-aur]"
 INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
- Check if the section already exists in the file
+# Check if the section already exists in the file
 if ! grep -q "$CHAOTIC_AUR_SECTION" "$PACMAN_CONF"; then
      Add the section to the end of the file
     echo -e "\n$CHAOTIC_AUR_SECTION\n$INCLUDE_LINE" >> "$PACMAN_CONF"
@@ -43,7 +43,7 @@ sudo systemctl enable --now zramswap
 
 sudo chown -R root:$(id -gn) "$HOME/.config"
 chmod -R 770 "$HOME/.config"
- WIFI 
+# WIFI 
 CONFIG="$HOME/.config/polybar/system.ini"
 
 if [ ! -f "$CONFIG" ]; then
@@ -80,7 +80,7 @@ sudo cp zsh/.zshrc $HOME
 sudo chown root:$(id -gn) $HOME/.cache/betterlockscreen
 sudo chmod 750 $HOME/.cache/betterlockscreen
 
- Find if my uses the wifi or ethernet
+ #Find  for the wifi or ethernet
 
 CONFIG="$HOME/.config/polybar/config.ini"
 
