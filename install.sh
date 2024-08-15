@@ -64,6 +64,11 @@ sudo mv -f cache/* "$HOME/.cache/"
 # Copy the backlight rules file, forcing the overwrite
 sudo mv -f udev/rules.d/90-backlight.rules /etc/udev/rules.d/
 
+# Define the path to the udev rules file
+RULES_FILE="/etc/udev/rules.d/90-backlight.rules"
+CURRENT_USER=$(whoami)
+sudo sed -i "s/\$USER/$CURRENT_USER/g" "$RULES_FILE"
+
 # Copy the networkmanager_dmenu file, forcing the overwrite
 sudo mv -f usr/bin/networkmanager_dmenu /usr/bin/
 sudo chmod +x /usr/bin/networkmanager_dmenu
