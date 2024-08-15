@@ -2,9 +2,7 @@
 ########################
 # Author: Rocklin K S
 # Date: 13/08/2024
-#
-# This script outputs the helath
-#
+# This script makes my config to autinstall
 # Version: v1
 ############################
 
@@ -12,7 +10,7 @@
 set -exo  pipefail
 #Check if yay is installed
 if ! command -v yay &> /dev/null; then
-    sudo pacman -S yay
+    sudo pacman -S yay --noconfirm
 fi
 
 # Function to check and add chaotic-aur repo
@@ -22,17 +20,17 @@ if ! grep -q "chaotic-aur" /etc/pacman.conf; then
     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
 fi
-PACMAN_CONF="/etc/pacman.conf"
-CHAOTIC_AUR_SECTION="[chaotic-aur]"
+PACMAN="/etc/pacman.conf"
+CHAOTIC="[chaotic-aur]"
 INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
 # Check if the section already exists in the file
-if ! grep -q "$CHAOTIC_AUR_SECTION" "$PACMAN_CONF"; then
+if ! grep -q "$CHAOTIC_AUR_SECTION" "$PACMAN"; then
 #     Add the section to the end of the file
-    echo -e "\n$CHAOTIC_AUR_SECTION\n$INCLUDE_LINE" >> "$PACMAN_CONF"
-    echo "Added $CHAOTIC_AUR_SECTION and $INCLUDE_LINE to $PACMAN_CONF."
+    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
+    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
 else
-    echo "$CHAOTIC_AUR_SECTION already exists in $PACMAN_CONF."
+    echo "$CHAOTIC already exists in $PACMAN."
 fi
 
 sudo pacman -Syu --noconfirm
@@ -56,78 +54,35 @@ for package in "${packages[@]}"; do
     fi
 done
 
+##Services to Enbale
 sudo systemctl enable --now bluetooth
 sudo systemctl enable --now preload
 
-
-sudo chown -R root:$(id -gn) "$HOME/.config"
-chmod -R 770 "$HOME/.config"
-# WIFI 
-CONFIG="$HOME/.config/polybar/system.ini"
-
-if [ ! -f "$CONFIG" ]; then
-    echo "Creating configuration file at $CONFIG"
-    mkdir -p "$HOME/.config/polybar"
-    echo "[settings]" > "$CONFIG"
-    echo "sys_network_interface = wlan0" >> "$CONFIG"
-fi
-
-WIFI=$(ip link | awk '/state UP/ {print $2}' | tr -d :)
-sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$CONFIG"
-brightness=$(ls -1 /sys/class/backlight/)
-sed -i "s/sys_graphics_card = intel_backlight/sys_graphics_card = $brightness/" "$CONFIG"
-
-# Copy cache files to the user's .cache directory, forcing the overwrite
-# Check if the cache directory exists before copying
-if [ -d "cache" ]; then
-    # Forcefully copy cache files to the user's .cache directory
-    sudo cp -Rf cache/* "$HOME/.cache/"
-    echo "Cache files copied to $HOME/.cache/."
-else
-    echo "Cache directory does not exist. Skipping cache copy."
-fi
-
+## Move the betterlock folder
+sudo mv -f cache/* "$HOME/.cache/"
 
 # Copy the backlight rules file, forcing the overwrite
-sudo cp -f udev/rules.d/90-backlight.rules /etc/udev/rules.d/
+sudo mv -f udev/rules.d/90-backlight.rules /etc/udev/rules.d/
 
 # Copy the networkmanager_dmenu file, forcing the overwrite
-sudo cp -f usr/bin/networkmanager_dmenu /usr/bin/
+sudo mv -f usr/bin/networkmanager_dmenu /usr/bin/
 sudo chmod +x /usr/bin/networkmanager_dmenu
 
-if [ -d "$HOME/.config" ]; then
-    sudo cp -R config/* $HOME/.config/ -rf
-else
-    echo "Creating .config directory at $HOME/.config"
-    mkdir -p "$HOME/.config"
-    sudo cp -R config/* $HOME/.config/ -rf
-fi
-
-sudo chmod +x $HOME/.config/polybar/scripts/*
-
-if [ -d "Fonts" ]; then
-    sudo cp -R Fonts/ /usr/share/fonts/
-else
-    mkdir -p Fonts
-    tar -xzvf Fonts.tar.gz -C Fonts
-    sudo cp -R Fonts/ /usr/share/fonts/
-fi
+sudo mv -f Fonts/ /usr/share/fonts/
 sudo fc-cache -fv
 
 # Create the zsh directory and extract the contents of zsh.tar.gz
 mkdir -p zsh
 tar -xzvf zsh.tar.gz -C zsh
-
-# Copy .bashrc and .zshrc to the HOME directory, replacing if they already exist
-sudo cp -f zsh/.bashrc $HOME/.bashrc
-sudo cp -f zsh/.zshrc $HOME/.zshrc
+sudo mv -f zsh/.bashrc $HOME/.bashrc
+sudo mv -f zsh/.zshrc $HOME/.zshrc
 
 # Check if the betterlockscreen cache directory exists and has the correct permissions
 if [ -d "$HOME/.cache/betterlockscreen" ]; then
     if [ "$(stat -c '%U:%G' "$HOME/.cache/betterlockscreen")" != "root:$(id -gn)" ] || [ "$(stat -c '%a' "$HOME/.cache/betterlockscreen")" != "750" ]; then
         sudo chown root:$(id -gn) "$HOME/.cache/betterlockscreen"
         sudo chmod 750 "$HOME/.cache/betterlockscreen"
-        echo "Updated permissions for $HOME/.cache/betterlockscreen"
+ 
     else
         echo "Permissions for $HOME/.cache/betterlockscreen are already correct. Skipping."
     fi
@@ -135,8 +90,13 @@ else
     echo "$HOME/.cache/betterlockscreen directory does not exist. Skipping permission update."
 fi
 
+## Set the permissions for the .config
+sudo chown -R root:$(id -gn) "$HOME/.config"
+chmod -R 770 "$HOME/.config"
 
-# Find interface for the wifi or ethernet
+## Move the Config files and set the network
+sudo mv -f config/* $HOME/.config/
+sudo chmod +x $HOME/.config/polybar/scripts/*
 CONFIG="$HOME/.config/polybar/config.ini"
 
 ETHERNET=$(ip link | awk '/state UP/ {print $2}' | tr -d :)
@@ -147,6 +107,3 @@ if [ -n "$WIFI" ]; then
 elif [ -n "$ETHERNET" ]; then
     sed -i "s/sys_network_interface = wlan0/sys_network_interface = $ETHERNET/" "$CONFIG"
 fi
-
-
-
