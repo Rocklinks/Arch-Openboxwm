@@ -28,7 +28,7 @@ INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
 # Check if the section already exists in the file
 if ! grep -q "$CHAOTIC_AUR_SECTION" "$PACMAN_CONF"; then
-     Add the section to the end of the file
+#     Add the section to the end of the file
     echo -e "\n$CHAOTIC_AUR_SECTION\n$INCLUDE_LINE" >> "$PACMAN_CONF"
     echo "Added $CHAOTIC_AUR_SECTION and $INCLUDE_LINE to $PACMAN_CONF."
 else
@@ -56,38 +56,9 @@ for package in "${packages[@]}"; do
     fi
 done
 
-# Check if Bluetooth service is available and enable it if not already enabled
-if systemctl list-unit-files --type=service | grep -q "bluetooth.service"; then
-    if [ "$(systemctl is-enabled bluetooth)" != "enabled" ]; then
-        echo "Enabling Bluetooth service."
-        sudo systemctl enable --now bluetooth
-    else
-        echo "Bluetooth service is already enabled. Skipping."
-    fi
-else
-    echo "Bluetooth service is not available. Skipping enablement."
-fi
+sudo systemctl enable --now bluetooth
+sudo systemctl enable --now preload
 
-# Check if Preload service is available and enable it if not already enabled
-if systemctl list-unit-files --type=service | grep -q "preload.service"; then
-    if [ "$(systemctl is-enabled preload)" != "enabled" ]; then
-        echo "Enabling Preload service."
-        sudo systemctl enable --now preload
-    else
-        echo "Preload service is already enabled. Skipping."
-    fi
-else
-    echo "Preload service is not available. Skipping enablement."
-fi
-
-
-# Check if zram-generator is configured
-if [ ! -f /etc/systemd/zram-generator.conf ] && [ ! -d /etc/systemd/zram-generator.conf.d ]; then
-    echo "zram-generator is not configured. Enabling zramswap service."
-    sudo systemctl enable --now zramswap
-else
-    echo "zram-generator is already configured. Skipping zramswap service enablement."
-fi
 
 sudo chown -R root:$(id -gn) "$HOME/.config"
 chmod -R 770 "$HOME/.config"
