@@ -9,56 +9,56 @@
 
 set -exo  pipefail
 #Check if yay is installed
-#if ! command -v yay &> /dev/null; then
-#    sudo pacman -S yay --noconfirm
-#fi
+if ! command -v yay &> /dev/null; then
+    sudo pacman -S yay --noconfirm
+fi
 
 # Function to check and add chaotic-aur repo
-#if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-#    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-#    sudo pacman-key --lsign-key 3056513887B78AEB
-#    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
-#    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
-#fi
+if ! grep -q "chaotic-aur" /etc/pacman.conf; then
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
+fi
 
-#PACMAN="/etc/pacman.conf"
-#CHAOTIC="[chaotic-aur]"
-#INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
+PACMAN="/etc/pacman.conf"
+CHAOTIC="[chaotic-aur]"
+INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
 # Check if the section already exists in the file
-#if ! grep -q "$CHAOTIC" "$PACMAN"; then
-#    # Add the section to the end of the file
-#    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
-#    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
-#else
-#    echo "$CHAOTIC already exists in $PACMAN."
-#fi
+if ! grep -q "$CHAOTIC" "$PACMAN"; then
+    # Add the section to the end of the file
+    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
+    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
+else
+    echo "$CHAOTIC already exists in $PACMAN."
+fi
 
 
-#sudo pacman -Syu --noconfirm
+sudo pacman -Syu --noconfirm
 # Define the list of packages to install
-#packages=(
-#    zramswap preload python-dbus auto-cpufreq
-#    xfce4-panel polkit-gnome xfdesktop blueman
-#    xfce4-settings xfce4-power-manager xfce4-docklike-plugin
-#    bc openbox obconf playerctl picom parcellite
-#    numlockx rofi polybar lxappearance betterlockscreen
-#    zsh zsh-syntax-highlighting zsh-autosuggestions
-#   zsh-history-substring-search zsh-completions
-#)
+packages=(
+    zramswap preload python-dbus auto-cpufreq
+    xfce4-panel polkit-gnome xfdesktop blueman
+    xfce4-settings xfce4-power-manager xfce4-docklike-plugin
+    bc openbox obconf playerctl picom parcellite
+    numlockx rofi polybar lxappearance betterlockscreen
+    zsh zsh-syntax-highlighting zsh-autosuggestions
+   zsh-history-substring-search zsh-completions
+)
 
 # Install the packages if they are not already installed
-#for package in "${packages[@]}"; do
-#    if ! pacman -Q "$package" &> /dev/null; then
-#        sudo pacman -S "$package" --noconfirm
-#    else
-#        echo "$package is already installed. Skipping."
-#    fi
-#done
+for package in "${packages[@]}"; do
+    if ! pacman -Q "$package" &> /dev/null; then
+        sudo pacman -S "$package" --noconfirm
+    else
+        echo "$package is already installed. Skipping."
+    fi
+done
 
 ##Services to Enbale
-#sudo systemctl enable --now bluetooth
-#sudo systemctl enable --now preload
+sudo systemctl enable --now bluetooth
+sudo systemctl enable --now preload
 
 # Copy the backlight rules file, forcing the overwrite
 sudo cp -Rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
