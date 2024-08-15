@@ -123,4 +123,4 @@ elif [ -n "$ETHERNET" ]; then
 else
     echo "No active network interfaces found."
 fi
-
+chmod u+rw /sys/class/backlight/intel_backlight/brightness
