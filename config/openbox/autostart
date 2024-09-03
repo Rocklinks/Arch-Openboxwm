@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ## Kill if already running
-killall -9 xfsettingsd polybar xfdesktop xfce4-panel ksuperkey xfce4-power-manager dunst picom numlockx parcellite
+killall -9 xfsettingsd polybar xfdesktop xfce4-panel ksuperkey xfce4-power-manager dunst xcompmgr numlockx parcellite
 
 ## Restore Wallpaper
 ##nitrogen --restore
@@ -21,7 +21,7 @@ exec numlockx &
 exec parcellite &
 
 ## Compositor
-exec picom &
+exec xcompmgr &
 
 ## Polybar
 exec polybar &
