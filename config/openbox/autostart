@@ -37,6 +37,8 @@ exec thunar --daemon &
 
 exec /usr/lib/nvidia-prime-applet/nvidia-prime &
 
+exec ~/.config/polybar/scripts/bat.sh &
+
 ## Polkit-Gnome ##
 exec //usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
