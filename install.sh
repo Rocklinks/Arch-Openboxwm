@@ -3,7 +3,7 @@
 # Author: Rocklin K S
 # Date: 13/08/2024
 # This script makes my config to autinstall
-# Version: v1
+# Version: v2
 ############################
 
 
