@@ -41,7 +41,7 @@ packages=(
     zramswap preload python-dbus auto-cpufreq
     xfce4-panel polkit-gnome xfdesktop blueman
     xfce4-settings xfce4-power-manager xfce4-docklike-plugin
-    bc openbox obconf playerctl picom parcellite
+    bc openbox obconf playerctl xcompmgr parcellite
     numlockx rofi polybar lxappearance betterlockscreen
     zsh zsh-syntax-highlighting zsh-autosuggestions
    zsh-history-substring-search zsh-completions
