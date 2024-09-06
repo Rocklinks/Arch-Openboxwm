@@ -37,6 +37,8 @@ exec thunar --daemon &
 
 exec /usr/lib/nvidia-prime-applet/nvidia-prime &
 
+exec xdman --background &
+
 exec ~/.config/polybar/scripts/bat.sh &
 
 ## Polkit-Gnome ##
