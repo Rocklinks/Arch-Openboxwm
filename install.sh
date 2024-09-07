@@ -164,3 +164,72 @@ else
     echo "No battery detected."
 fi
 
+
+#############################################
+THEMES_DIR="./themes"
+
+# Check if the themes directory exists
+if [ ! -d "$THEMES_DIR" ]; then
+    echo "Themes directory does not exist."
+    exit 1
+fi
+
+# Loop through .xz and .gz files in the themes directory
+for file in "$THEMES_DIR"/*.{xz,gz}; do
+    # Check if the file exists (to avoid errors if no files match)
+    if [ -e "$file" ]; then
+        echo "Extracting $file..."
+
+        # Determine the file type and extract accordingly
+        case "$file" in
+            *.xz)
+                # Extract .xz files
+                tar -xf "$file" -C "$THEMES_DIR"
+                ;;
+            *.gz)
+                # Extract .gz files
+                tar -xzf "$file" -C "$THEMES_DIR"
+                ;;
+        esac
+
+        # Move the extracted folder to /usr/share/themes/
+        extracted_folder="${file%.*}"  # Remove the file extension
+        extracted_folder="${extracted_folder%.*}"  # Remove the second extension if any
+        if [ -d "$extracted_folder" ]; then
+            echo "Moving $extracted_folder to /usr/share/themes/"
+            sudo mv "$extracted_folder" /usr/share/themes/
+        else
+            echo "No extracted folder found for $file."
+        fi
+    else
+        echo "No .xz or .gz files found in $THEMES_DIR."
+    fi
+done
+
+########################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
