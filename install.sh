@@ -85,8 +85,37 @@ home_dir="/home/$default_user"
 sudo -u "$default_user" mkdir -p "$config_dir"
 
 # Copy the directories
-sudo -u "$default_user" cp -Rf config/dunst config/networkmanager-dmenu config/openbox config/polybar config/xfce4 "$config_dir/"
+sudo -u "$default_user" cp -Rf config/dunst config/networkmanager-dmenu config/openbox config/xfce4 "$config_dir/"
 
+copy_normal_polybar() {
+    cp -r /path/to/polybar ~/.config/
+    echo "Normal Polybar configuration copied to ~/.config"
+}
+
+# Function to copy transparent Polybar configuration
+copy_transparent_polybar() {
+    cp -r /path/to/polybar-transparent ~/.config/polybar
+    echo "Transparent Polybar configuration copied to ~/.config/polybar"
+}
+
+# Prompt user for choice
+echo "Select Polybar version:"
+echo "1. Normal"
+echo "2. Transparent"
+read -p "Enter your choice (1 or 2): " choice
+
+# Handle user choice
+case $choice in
+    1)
+        copy_normal_polybar
+        ;;
+    2)
+        copy_transparent_polybar
+        ;;
+    *)
+        echo "Invalid choice. Please select 1 or 2."
+        ;;
+esac
 # Change permissions for polybar scripts
 sudo -u "$default_user" chmod +x "$config_dir/polybar/scripts/"*
 
