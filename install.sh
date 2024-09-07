@@ -56,6 +56,26 @@ for package in "${packages[@]}"; do
     fi
 done
 
+install_sddm() {
+    sudo pacman -S sddm --noconfirm
+    sudo systemctl enable sddm
+    sudo systemctl start sddm
+    echo "SDDM has been installed and enabled successfully."
+}
+
+# Ask the user if they want to install and configure SDDM
+read -p "Do you want to install and configure SDDM? (y/n): " response
+
+# Convert response to lowercase
+response=${response,,}
+
+if [[ "$response" == "y" ]]; then
+    install_sddm
+else
+    echo "SDDM installation and configuration has been skipped."
+fi
+
+
 ##Services to Enbale
 sudo systemctl enable --now bluetooth
 sudo systemctl enable --now preload
