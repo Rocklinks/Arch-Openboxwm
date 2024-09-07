@@ -166,7 +166,7 @@ fi
 
 
 #############################################
-THEMES_DIR="./themes"
+THEMES_DIR="themes"
 
 # Check if the themes directory exists
 if [ ! -d "$THEMES_DIR" ]; then
@@ -208,6 +208,37 @@ done
 
 ########################################################
 
+ICONS_DIR="icons"
+
+# Check if the icons directory exists
+if [ ! -d "$ICONS_DIR" ]; then
+    echo "Icons directory does not exist."
+    exit 1
+fi
+
+# Loop through .xz files in the icons directory
+for file in "$ICONS_DIR"/*.xz; do
+    # Check if the file exists (to avoid errors if no files match)
+    if [ -e "$file" ]; then
+        echo "Extracting $file..."
+
+        # Create the kora folder
+        KORA_DIR="$ICONS_DIR/kora"
+        mkdir -p "$KORA_DIR"
+
+        # Extract the .xz file to the kora folder
+        tar -xf "$file" -C "$KORA_DIR"
+
+        # Copy the extracted contents to /usr/share/icons/
+        echo "Copying extracted contents to /usr/share/icons/..."
+        sudo cp -r "$KORA_DIR"/* /usr/share/icons/
+
+        # Remove the kora folder
+        rm -rf "$KORA_DIR"
+    else
+        echo "No .xz files found in $ICONS_DIR."
+    fi
+done
 
 
 
