@@ -38,13 +38,13 @@ fi
 sudo pacman -Syu --noconfirm
 # Define the list of packages to install
 packages=(
-    zramswap preload python-dbus auto-cpufreq
-    xfce4-panel polkit-gnome xfdesktop blueman
-    xfce4-settings xfce4-power-manager xfce4-docklike-plugin
-    bc openbox obconf playerctl xcompmgr parcellite
-    numlockx rofi polybar lxappearance betterlockscreen
-    zsh zsh-syntax-highlighting zsh-autosuggestions
-   zsh-history-substring-search zsh-completions
+    zramswap preload python-dbus xarchiver xed xorg thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
+    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
+    xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
+    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
+    numlockx rofi polybar lxappearance betterlockscreen gst-plugins-base
+    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly
+   zsh-history-substring-search zsh-completions gst-plugins-good
 )
 
 # Install the packages if they are not already installed
