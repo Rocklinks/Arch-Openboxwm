@@ -1,21 +1,34 @@
 #!/bin/bash
+# Define the battery device
+BATTERY_DEVICE=$(upower -e | grep battery)
 
-# Function to check battery status
-check_battery() {
+# Check if the battery device was found
+if [ -z "$BATTERY_DEVICE" ]; then
+    echo "No battery device found."
+    exit 1
+fi
+
+# Loop indefinitely
+while true; do
     # Get the battery percentage
-    battery_percentage=$(cat /sys/class/power_supply/BAT0/capacity)
+    charge=$(upower -i "$BATTERY_DEVICE" | grep percentage | awk '{print $2}' | tr -d '%')
 
-    # Check if the battery is at 100%
-    if [ "$battery_percentage" -eq 100 ]; then
-        send_notification
+    # Check if the charge variable is a number
+    if ! [[ "$charge" =~ ^[0-9]+$ ]]; then
+        echo "Failed to retrieve battery percentage."
+        sleep 10
+        continue
     fi
-}
 
-# Function to send notification
-send_notification() {
-    notify-send "Battery Status" "Your battery is fully charged (100%)!" --icon=dialog-information
-}
+    # Check if the charge is 99%
+    if [ "$charge" -eq 99 ]; then
+        notify-send --icon=/usr/share/icons/kora/devices/scalable/gnome-dev-battery.svg "Battery Status" "Your battery is almost fully charged"
+        
+        # Delay for 60 seconds to avoid spamming notifications
+        sleep 60
+    fi
 
-# Execute the battery check
-check_battery
+    # Delay for 10 seconds before checking again
+    sleep 2
+done
 
