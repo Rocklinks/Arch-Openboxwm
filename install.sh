@@ -174,7 +174,7 @@ elif [ -n "$ETHERNET" ]; then
 else
     echo "No active network interfaces found."
 fi
-sudo chmod 664 /sys/class/backlight/intel_backlight/brightness
+sudo chmod 777 /sys/class/backlight/intel_backlight/brightness
 
 
 if [ -e "/sys/class/power_supply/BAT0" ]; then
