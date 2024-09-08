@@ -176,15 +176,6 @@ else
 fi
 sudo chmod 777 /sys/class/backlight/intel_backlight/brightness
 
-
-if [ -e "/sys/class/power_supply/BAT0" ]; then
-    cp bat.sh ~/.config/polybar/scripts/ 
-    echo "Script copied successfully."
-else
-    echo "No battery detected."
-fi
-
-
 #############################################
 THEMES_DIR="themes"
 
