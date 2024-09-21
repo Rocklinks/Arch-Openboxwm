@@ -46,7 +46,7 @@
       <property name="AudioLowerVolume" type="string" value="amixer -D pulse sset Master 3%-"/>
       <property name="AudioMute" type="string" value="amixer -D pulse sset Master toggle"/>
       <property name="&lt;Super&gt;a" type="string" value="/home/rocklin/.config/polybar/scripts/rofi-launcher"/>
-      <property name="&lt;Super&gt;c" type="string" value="/home/rocklin/.config/polybar/scripts/rofi-powermenu"/>
+      <property name="&lt;Super&gt;c" type="string" value="/home/rocklin/.config/polybar/scripts/power"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
