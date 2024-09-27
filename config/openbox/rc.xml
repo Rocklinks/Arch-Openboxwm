@@ -590,7 +590,7 @@
     </keybind>
     <keybind key="W-c">
       <action name="Execute">
-        <command>~/.config/polybar/scripts/rofi-powermenu</command>
+        <command>~/.config/polybar/scripts/power</command>
       </action>
     </keybind>
     <!-- Misc -->
