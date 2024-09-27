@@ -1,0 +1,94 @@
+/* Copyright (C) 2020-2024 Aditya Shakya <adi1090x@gmail.com> */
+
+/* Colors */
+
+* {
+//  background:     #1E2128;
+    background:     rgba(0, 0, 0, 0.25);
+    background-alt: #292d37;
+//  foreground:     #ABB2BF;
+    foreground:     #F8F8F8;
+//  selected:       #5294E2;
+    selected:       #00FFFF; 
+    active:         #00ffff;
+    urgent:         #ffffff;
+    
+}
+
+
+element {
+    border:  1px;
+    border-radius: 5px;
+    padding: 5px;
+    border-color: #00FFFF;
+}
+element-text {
+    background-color: transparent;
+    text-color:       #FFFFFF;
+    font: "JetBrains Mono Medium";
+    margin:   0px 80px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+element.normal.urgent {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+element.normal.active {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+element.selected.normal {
+    background-color: #00FFFF;
+    border-color: #00FFFF;
+    text-color:       #E5B9C6;
+}
+element.selected.urgent {
+    background-color: #00FFFF;
+    border-color: #00FFFF;
+    text-color:       #E5B9C6;
+}
+element.selected.active {
+    background-color: #00FFFF;
+    border-color: #00FFFF;
+    text-color:       #E5B9C6;
+}
+element.alternate.normal {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+element.alternate.urgent {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+element.alternate.active {
+    background-color: transparent;
+    text-color:       #E5B9C6;
+}
+
+
+element-text.selected.normal {
+    background-color: transparent;
+    border-color: transparent;
+    text-color:       #282738;
+    font: "JetBrains Mono Medium";
+}
+element-text.selected.urgent {
+    background-color: transparent;
+    border-color: transparent;
+    text-color:       #282738;
+    font: "JetBrains Mono Medium";
+}
+element-text.selected.active {
+    background-color: transparent;
+    border-color: transparent;
+    text-color:       #282738;
+    font: "JetBrains Mono Medium";
+}
+
+
+
+
