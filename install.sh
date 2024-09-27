@@ -42,7 +42,7 @@ packages=(
     xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
     xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
     bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
-    numlockx rofi polybar lxappearance betterlockscreen gst-plugins-base
+    numlockx rofi polybar lxappearance gst-plugins-base
     zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly
    zsh-history-substring-search zsh-completions gst-plugins-good
 )
@@ -89,7 +89,7 @@ sudo sed -i "s/\$USER/$(logname)/g" "$RULES_FILE"
 
 # Copy the networkmanager_dmenu file, forcing the overwrite
 sudo $(logname) cp -Rf usr/bin/networkmanager_dmenu /usr/bin/
-sudo $(logname) chmod +x /usr/bin/networkmanager_dmenu
+sudo chmod +x /usr/bin/networkmanager_dmenu
 
 sudo mkdir -p Fonts
 tar -xzvf Fonts.tar.gz -C Fonts
@@ -106,13 +106,13 @@ sudo -u "$(logname)" mkdir -p "$config_dir"
 sudo cp -Rf config/dunst config/networkmanager-dmenu config/openbox config/xfce4 "$config_dir/"
 
 copy_normal_polybar() {
-    sudo cp -r config/polybar $home_dir/.config/
+    sudo cp -rf config/polybar $home_dir/.config/
     echo "Normal Polybar configuration copied to ~/.config"
 }
 
 # Function to copy transparent Polybar configuration
 copy_transparent_polybar() {
-    sudo cp -r config/polybar-transparent $home_dir/polybar
+    sudo cp -rf config/polybar-transparent $home_dir/polybar
     echo "Transparent Polybar configuration copied to ~/.config/polybar"
 }
 
@@ -137,17 +137,11 @@ esac
 # Change permissions for polybar scripts
 sudo chmod +x "$config_dir/polybar/scripts/"*
 
-# Create the zsh directory and extract the contents of zsh.tar.gz
+# optional
 sudo mkdir -p zsh
 tar -xzvf zsh.tar.gz -C zsh
 sudo cp -Rf zsh/.bashrc "$home_dir/.bashrc"
 sudo cp -Rf zsh/.zshrc "$home_dir/.zshrc"
-
-sudo mkdir -p $home_dir/.local/share
-sudo mkdir -p $home_dir/.local/share/cache
-DIR="$home_dir/.local/share/cache"
-sudo cp -rf cache/* "$DIR/"
-
 
 SYSTEM_CONFIG="$home_dir/.config/polybar/system.ini"
 POLYBAR_CONFIG="$home_dir/.config/polybar/config.ini"
