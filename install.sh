@@ -56,26 +56,6 @@ for package in "${packages[@]}"; do
     fi
 done
 
-install_sddm() {
-    sudo pacman -S sddm --noconfirm
-    sudo systemctl enable sddm
-    sudo systemctl start sddm
-    echo "SDDM has been installed and enabled successfully."
-}
-
-# Ask the user if they want to install and configure SDDM
-read -p "Do you want to install and configure SDDM? (y/n): " response
-
-# Convert response to lowercase
-response=${response,,}
-
-if [[ "$response" == "y" ]]; then
-    install_sddm
-else
-    echo "SDDM installation and configuration has been skipped."
-fi
-
-
 ##Services to Enbale
 sudo systemctl enable --now bluetooth
 sudo systemctl enable --now preload
@@ -88,7 +68,7 @@ RULES_FILE="/etc/udev/rules.d/90-backlight.rules"
 sudo sed -i "s/\$USER/$(logname)/g" "$RULES_FILE"
 
 # Copy the networkmanager_dmenu file, forcing the overwrite
-sudo $(logname) cp -Rf usr/bin/networkmanager_dmenu /usr/bin/
+sudo cp -Rf usr/bin/networkmanager_dmenu /usr/bin/
 sudo chmod +x /usr/bin/networkmanager_dmenu
 
 sudo mkdir -p Fonts
@@ -103,7 +83,7 @@ home_dir="/home/$(logname)"
 sudo -u "$(logname)" mkdir -p "$config_dir"
 
 # Copy the directories
-sudo cp -Rf config/dunst config/networkmanager-dmenu config/openbox config/xfce4 "$config_dir/"
+sudo cp -Rf config/networkmanager-dmenu config/openbox config/xfce4 "$config_dir/"
 
 copy_normal_polybar() {
     sudo cp -rf config/polybar $home_dir/.config/
@@ -112,7 +92,7 @@ copy_normal_polybar() {
 
 # Function to copy transparent Polybar configuration
 copy_transparent_polybar() {
-    sudo cp -rf config/polybar-transparent $home_dir/polybar
+    sudo cp -rf config/polybar-transparent $config_dir/polybar
     echo "Transparent Polybar configuration copied to ~/.config/polybar"
 }
 
