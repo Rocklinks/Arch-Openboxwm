@@ -120,13 +120,13 @@ sudo fc-cache -fv
 
 stacer = http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
 wget $stacer
-sudo pacman -U $stacer --noconfirm
-sudo rm -rf $stacer
+sudo pacman -U stacer-1.1.0-1-x86_64.pkg.tar.zst --noconfirm
+sudo rm -rf stacer-1.1.0-1-x86_64.pkg.tar.zst
 
 xdm = https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
 wget $xdm
-sudo pacman -U $xdm
-sudo rm -rf $xdm 
+sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
+sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
 # optional
 sudo mkdir -p zsh
 tar -xzvf zsh.tar.gz -C zsh
