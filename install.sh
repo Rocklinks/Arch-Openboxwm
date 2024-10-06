@@ -80,7 +80,7 @@ fi
 sudo pacman -Syu --noconfirm
 # Define the list of packages to install
 packages=(
-    zramswap preload python-dbus xarchiver xed xorg thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
+    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
     xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
     xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
     bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
@@ -103,29 +103,38 @@ sudo systemctl enable --now bluetooth
 sudo systemctl enable --now preload
 
 # Copy the backlight rules file, forcing the overwrite
-sudo cp -Rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
+sudo cp -rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
 
 # Define the path to the udev rules file
 RULES_FILE="/etc/udev/rules.d/90-backlight.rules"
 sudo sed -i "s/\$USER/$(logname)/g" "$RULES_FILE"
 
 # Copy the networkmanager_dmenu file, forcing the overwrite
-sudo cp -Rf usr/bin/networkmanager_dmenu /usr/bin/
+sudo cp -rf usr/bin/networkmanager_dmenu /usr/bin/
 sudo chmod +x /usr/bin/networkmanager_dmenu
 
 sudo mkdir -p Fonts
 tar -xzvf Fonts.tar.gz -C Fonts
-sudo cp -Rf Fonts/ /usr/share/fonts/
+sudo cp -rf Fonts/ /usr/share/fonts/
 sudo fc-cache -fv
 
+stacer = http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
+wget $stacer
+sudo pacman -U $stacer --noconfirm
+sudo rm -rf $stacer
+
+xdm = https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
+wget $xdm
+sudo pacman -U $xdm
+sudo rm -rf $xdm 
 # optional
 sudo mkdir -p zsh
 tar -xzvf zsh.tar.gz -C zsh
-sudo cp -Rf zsh/.bashrc "$home_dir/.bashrc"
-sudo cp -Rf zsh/.zshrc "$home_dir/.zshrc"
+sudo cp -Rf zsh/.bashrc "$HOME/.bashrc"
+sudo cp -Rf zsh/.zshrc "$HOME/.zshrc"
 
-SYSTEM_CONFIG="$home_dir/.config/polybar/system.ini"
-POLYBAR_CONFIG="$home_dir/.config/polybar/config.ini"
+SYSTEM_CONFIG="$HOME/.config/polybar/system.ini"
+POLYBAR_CONFIG="$HOME/.config/polybar/config.ini"
 
 # Get the active Ethernet and Wi-Fi interfaces
 ETHERNET=$(ip link | awk '/state UP/ && !/wl/ {print $2}' | tr -d :)
