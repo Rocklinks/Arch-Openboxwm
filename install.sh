@@ -9,10 +9,8 @@
 
 set -exo  pipefail
 
-# Create the destination directory if it doesn't exist
 mkdir -p "$HOME/.config"
 
-# Copy the directories
 cp -Rf config/networkmanager-dmenu config/openbox config/xfce4 "$HOME/.config"
 
 copy_normal_polybar() {
@@ -20,7 +18,6 @@ copy_normal_polybar() {
     echo "Normal Polybar configuration copied to ~/.config"
 }
 
-# Function to copy transparent Polybar configuration
 copy_transparent_polybar() {
     cp -rf config/polybar-transparent $HOME/.config/polybar
     echo "Transparent Polybar configuration copied to ~/.config/polybar"
@@ -200,7 +197,7 @@ done
 ########################################################
 
 ## Icons
-SOURCE_DIR="./icons"
+SOURCE_DIR="icons"
 
 TARGET_DIR="/usr/share/icons"
 for file in "$SOURCE_DIR"/*.tar.gz "$SOURCE_DIR"/*.tar.xz; do
