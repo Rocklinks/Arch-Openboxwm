@@ -81,7 +81,6 @@ if ! command -v yay &> /dev/null; then
     sudo pacman -S yay --noconfirm
 fi
 
-# Function to check and add chaotic-aur repo
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
    sudo pacman-key --lsign-key 3056513887B78AEB
@@ -156,16 +155,14 @@ sudo mkdir -p zsh
 sudo tar -xzvf zsh.tar.gz -C zsh
 sudo cp -Rf zsh/.bashrc "$home/.bashrc"
 sudo cp -Rf zsh/.zshrc "$home/.zshrc"
-
 #############################################
 THEMES_DIR="themes"
-
 if [ ! -d "$THEMES_DIR" ]; then
     echo "Themes directory does not exist."
     exit 1
 fi
 
-for file in "$THEMES_DIR"/*.{xz,gz}; do
+for file in "$THEMES_DIR"/*.{xz,gz,zip}; do
     # Check if the file exists (to avoid errors if no files match)
     if [ -e "$file" ]; then
         echo "Extracting $file..."
@@ -174,11 +171,15 @@ for file in "$THEMES_DIR"/*.{xz,gz}; do
         case "$file" in
             *.xz)
                 # Extract .xz files
-                tar -xf "$file" -C "$THEMES_DIR"
+                sudo tar -xf "$file" -C "$THEMES_DIR"
                 ;;
             *.gz)
                 # Extract .gz files
-                tar -xzf "$file" -C "$THEMES_DIR"
+                sudo tar -xzf "$file" -C "$THEMES_DIR"
+                ;;
+            *.zip)
+                # Extract .gz files
+                sudo unzip "$file" -C "$THEMES_DIR"
                 ;;
         esac
 
