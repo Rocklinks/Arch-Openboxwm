@@ -47,92 +47,6 @@ esac
 
 # Change permissions for polybar scripts
 chmod +x "$HOME/.config/polybar/scripts/"*
-
-sudo -v
-
-#Check if yay is installed
-if ! command -v yay &> /dev/null; then
-    sudo pacman -S yay --noconfirm
-fi
-
-# Function to check and add chaotic-aur repo
-if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-   sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-   sudo pacman-key --lsign-key 3056513887B78AEB
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-fi
-
-PACMAN="/etc/pacman.conf"
-CHAOTIC="[chaotic-aur]"
-INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
-
-# Check if the section already exists in the file
-if ! grep -q "$CHAOTIC" "$PACMAN"; then
-    # Add the section to the end of the file
-    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
-    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
-else
-    echo "$CHAOTIC already exists in $PACMAN."
-fi
-
-
-sudo pacman -Syu --noconfirm
-# Define the list of packages to install
-packages=(
-    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
-    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
-    xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
-    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
-    numlockx rofi polybar lxappearance gst-plugins-base
-    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly
-   zsh-history-substring-search zsh-completions gst-plugins-good
-)
-
-# Install the packages if they are not already installed
-#for package in "${packages[@]}"; do
-    if ! pacman -Q "$package" &> /dev/null; then
-        sudo pacman -S "$package" --noconfirm
-    else
-        echo "$package is already installed. Skipping."
-    fi
-done
-
-##Services to Enbale
-sudo systemctl enable --now bluetooth
-sudo systemctl enable --now preload
-
-# Copy the backlight rules file, forcing the overwrite
-sudo cp -rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
-
-# Define the path to the udev rules file
-RULES_FILE="/etc/udev/rules.d/90-backlight.rules"
-sudo sed -i "s/\$USER/$(logname)/g" "$RULES_FILE"
-
-# Copy the networkmanager_dmenu file, forcing the overwrite
-sudo cp -rf usr/bin/networkmanager_dmenu /usr/bin/
-sudo chmod +x /usr/bin/networkmanager_dmenu
-
-sudo mkdir -p Fonts
-tar -xzvf Fonts.tar.gz -C Fonts
-sudo cp -rf Fonts/ /usr/share/fonts/
-sudo fc-cache -fv
-
-stacer = http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
-wget $stacer
-sudo pacman -U stacer-1.1.0-1-x86_64.pkg.tar.zst --noconfirm
-sudo rm -rf stacer-1.1.0-1-x86_64.pkg.tar.zst
-
-xdm = https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
-wget $xdm
-sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
-sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
-# optional
-sudo mkdir -p zsh
-tar -xzvf zsh.tar.gz -C zsh
-sudo cp -Rf zsh/.bashrc "$HOME/.bashrc"
-sudo cp -Rf zsh/.zshrc "$HOME/.zshrc"
-
 SYSTEM_CONFIG="$HOME/.config/polybar/system.ini"
 POLYBAR_CONFIG="$HOME/.config/polybar/config.ini"
 
@@ -159,16 +73,98 @@ else
     echo "No active network interfaces found."
 fi
 
+
+sudo -v
+
+###### Check if yay is installed ###############
+if ! command -v yay &> /dev/null; then
+    sudo pacman -S yay --noconfirm
+fi
+
+# Function to check and add chaotic-aur repo
+if ! grep -q "chaotic-aur" /etc/pacman.conf; then
+   sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+   sudo pacman-key --lsign-key 3056513887B78AEB
+   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+fi
+
+PACMAN="/etc/pacman.conf"
+CHAOTIC="[chaotic-aur]"
+INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
+
+if ! grep -q "$CHAOTIC" "$PACMAN"; then
+    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
+    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
+else
+    echo "$CHAOTIC already exists in $PACMAN."
+fi
+
+sudo pacman -Syu --noconfirm
+packages=(
+    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
+    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
+    xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
+    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
+    numlockx rofi polybar lxappearance gst-plugins-base
+    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly
+   zsh-history-substring-search zsh-completions gst-plugins-good
+)
+
+# Install the packages if they are not already installed
+for package in "${packages[@]}"; do
+    if ! pacman -Q "$package" &> /dev/null; then
+        sudo pacman -S "$package" --noconfirm
+    else
+        echo "$package is already installed. Skipping."
+    fi
+done
+
+##Services to Enbale
+enable_service() {
+    local service_name=$1
+    sudo systemctl enable "$service_name"
+}
+
+enable_service bluetooth
+enable_service tlp
+enable_service preload
+enable_service zramswap
+
+sudo cp -rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
+# Rules for the brightness
+USERNAME=$(whoami)
+sudo sed -i "s/\$USER/$USERNAME/g" /etc/udev/rules.d/90-backlight.rules
+
+sudo mkdir -p Fonts
+sudo tar -xzvf Fonts.tar.gz -C Fonts
+sudo cp -rf Fonts/ /usr/share/fonts/
+sudo fc-cache -fv
+
+stacer = http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
+wget $stacer
+sudo pacman -U stacer-1.1.0-1-x86_64.pkg.tar.zst --noconfirm
+sudo rm -rf stacer-1.1.0-1-x86_64.pkg.tar.zst
+
+xdm = https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
+wget $xdm
+sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
+sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
+# optional
+home = $HOME
+sudo mkdir -p zsh
+sudo tar -xzvf zsh.tar.gz -C zsh
+sudo cp -Rf zsh/.bashrc "$home/.bashrc"
+sudo cp -Rf zsh/.zshrc "$home/.zshrc"
+
 #############################################
 THEMES_DIR="themes"
 
-# Check if the themes directory exists
 if [ ! -d "$THEMES_DIR" ]; then
     echo "Themes directory does not exist."
     exit 1
 fi
 
-# Loop through .xz and .gz files in the themes directory
 for file in "$THEMES_DIR"/*.{xz,gz}; do
     # Check if the file exists (to avoid errors if no files match)
     if [ -e "$file" ]; then
@@ -202,37 +198,23 @@ done
 
 ########################################################
 
-ICONS_DIR="icons"
+## Icons
+SOURCE_DIR="./icons"
 
-# Check if the icons directory exists
-if [ ! -d "$ICONS_DIR" ]; then
-    echo "Icons directory does not exist."
-    exit 1
-fi
-
-# Loop through .xz files in the icons directory
-for file in "$ICONS_DIR"/*.xz; do
-    # Check if the file exists (to avoid errors if no files match)
-    if [ -e "$file" ]; then
-        echo "Extracting $file..."
-
-        # Create the kora folder
-        KORA_DIR="$ICONS_DIR/kora"
-        mkdir -p "$KORA_DIR"
-
-        # Extract the .xz file to the kora folder
-        tar -xf "$file" -C "$KORA_DIR"
-
-        # Copy the extracted contents to /usr/share/icons/
-        echo "Copying extracted contents to /usr/share/icons/..."
-        sudo cp -r "$KORA_DIR"/* /usr/share/icons/
-
-        # Remove the kora folder
-        rm -rf "$KORA_DIR"
-    else
-        echo "No .xz files found in $ICONS_DIR."
+TARGET_DIR="/usr/share/icons"
+for file in "$SOURCE_DIR"/*.tar.gz "$SOURCE_DIR"/*.tar.xz; do
+    if [[ -e "$file" ]]; then
+        if [[ "$file" == *.tar.gz ]]; then
+            sudo tar -xzf "$file" -C /tmp/
+        elif [[ "$file" == *.tar.xz ]]; then
+            sudo tar -xf "$file" -C /tmp/
+        fi
+        sudo mv /tmp/* "$TARGET_DIR"/
+        
+        rm "$file"
     fi
 done
+echo "All operations completed successfully."
 
 
 
