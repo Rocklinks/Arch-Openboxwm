@@ -6,11 +6,8 @@
 # Version: v2
 ############################
 
-
 set -exo  pipefail
-
 mkdir -p "$HOME/.config"
-
 cp -Rf config/networkmanager-dmenu config/openbox config/xfce4 "$HOME/.config"
 
 copy_normal_polybar() {
@@ -152,7 +149,7 @@ sudo mkdir -p zsh
 sudo tar -xzvf zsh.tar.gz -C zsh
 sudo cp -Rf zsh/.bashrc "$home/.bashrc"
 sudo cp -Rf zsh/.zshrc "$home/.zshrc"
-#############################################
+###### Themes ####
 THEMES_DIR="themes"
 if [ ! -d "$THEMES_DIR" ]; then
     echo "Themes directory does not exist."
@@ -164,22 +161,18 @@ for file in "$THEMES_DIR"/*.{xz,gz,zip}; do
     if [ -e "$file" ]; then
         echo "Extracting $file..."
 
-        # Determine the file type and extract accordingly
         case "$file" in
             *.xz)
                 # Extract .xz files
                 sudo tar -xf "$file" -C "$THEMES_DIR"
                 ;;
             *.gz)
-                # Extract .gz files
                 sudo tar -xzf "$file" -C "$THEMES_DIR"
                 ;;
             *.zip)
-                # Extract .gz files
                 sudo unzip "$file" -C "$THEMES_DIR"
                 ;;
         esac
-
         # Move the extracted folder to /usr/share/themes/
         extracted_folder="${file%.*}"  # Remove the file extension
         extracted_folder="${extracted_folder%.*}"  # Remove the second extension if any
@@ -194,9 +187,7 @@ for file in "$THEMES_DIR"/*.{xz,gz,zip}; do
     fi
 done
 
-########################################################
-
-## Icons
+### Icons
 SOURCE_DIR="icons"
 
 TARGET_DIR="/usr/share/icons"
@@ -209,7 +200,7 @@ for file in "$SOURCE_DIR"/*.tar.gz "$SOURCE_DIR"/*.tar.xz; do
         fi
         sudo mv /tmp/* "$TARGET_DIR"/
         
-        rm "$file"
+        sudo rm "$file"
     fi
 done
 echo "All operations completed successfully."
