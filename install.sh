@@ -3,30 +3,28 @@
 # Author: Rocklin K S
 # Date: 13/08/2024
 # This script makes my config to autinstall
-# Version: v2
+# Version: v3
 ############################
 
 set -exo  pipefail
 mkdir -p "$HOME/.config"
-cp -Rf config/networkmanager-dmenu config/openbox config/xfce4 "$HOME/.config"
+cp -rf config/networkmanager-dmenu config/openbox config/xfce4 "$HOME/.config/"
 
 copy_normal_polybar() {
-    cp -rf config/polybar $HOME/.config/
+    cp -rf config/polybar "$HOME/.config/"
     echo "Normal Polybar configuration copied to ~/.config"
 }
 
 copy_transparent_polybar() {
-    cp -rf config/polybar-transparent $HOME/.config/polybar
+    mv -f config/polybar-transparent "$HOME/.config/polybar"
     echo "Transparent Polybar configuration copied to ~/.config/polybar"
 }
 
-# Prompt user for choice
 echo "Select Polybar version:"
 echo "1. Normal"
 echo "2. Transparent"
 read -p "Enter your choice (1 or 2): " choice
 
-# Handle user choice
 case $choice in
     1)
         copy_normal_polybar
@@ -51,16 +49,11 @@ WIFI=$(ip link | awk '/state UP/ && /wl/ {print $2}' | tr -d :)
 # Check if Wi-Fi is active
 if [ -n "$WIFI" ]; then
     echo "Using Wi-Fi interface: $WIFI"
-    # Replace wlan0 with the actual Wi-Fi interface name in system.ini
     sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$SYSTEM_CONFIG"
     
-# Check if Ethernet is active
 elif [ -n "$ETHERNET" ]; then
     echo "Using Ethernet interface: $ETHERNET"
-    # Replace wlan0 with the Ethernet interface name in system.ini
     sed -i "s/sys_network_interface = wlan0/sys_network_interface = $ETHERNET/" "$SYSTEM_CONFIG"
-    
-    # Replace 'network' with 'ethernet' in config.ini
     sed -i "s/network/ethernet/g" "$POLYBAR_CONFIG"
 
 else
@@ -78,8 +71,8 @@ fi
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
    sudo pacman-key --lsign-key 3056513887B78AEB
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
+   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
 fi
 
 PACMAN="/etc/pacman.conf"
@@ -87,21 +80,21 @@ CHAOTIC="[chaotic-aur]"
 INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
 if ! grep -q "$CHAOTIC" "$PACMAN"; then
-    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
-    echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
+    sudo echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
+    sudo echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
 else
-    echo "$CHAOTIC already exists in $PACMAN."
+    sudo echo "$CHAOTIC already exists in $PACMAN."
 fi
 
 sudo pacman -Syu --noconfirm
 packages=(
-    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs
-    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox
-    xfce4-settings xfce4-power-manager xfce4-docklike-plugin 
-    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad
-    numlockx rofi polybar lxappearance gst-plugins-base
-    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly
-   zsh-history-substring-search zsh-completions gst-plugins-good
+    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs 
+    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox wine winetricks wine-mono wine-gecko seahorse
+    xfce4-settings xfce4-power-manager xfce4-docklike-plugin obs-studio virtualbox-guest-utils
+    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad ttf-wps-fonts localsend 
+    numlockx rofi polybar lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin
+    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent
+   zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox xfce4-screenshooter
 )
 
 # Install the packages if they are not already installed
@@ -112,7 +105,6 @@ for package in "${packages[@]}"; do
         echo "$package is already installed. Skipping."
     fi
 done
-
 ##Services to Enbale
 enable_service() {
     local service_name=$1
@@ -134,17 +126,17 @@ sudo tar -xzvf Fonts.tar.gz -C Fonts
 sudo cp -rf Fonts/ /usr/share/fonts/
 sudo fc-cache -fv
 
-stacer = http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
+stacer=http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
 wget $stacer
 sudo pacman -U stacer-1.1.0-1-x86_64.pkg.tar.zst --noconfirm
 sudo rm -rf stacer-1.1.0-1-x86_64.pkg.tar.zst
 
-xdm = https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
+xdm=https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
 wget $xdm
 sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
 sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
 # optional
-home = $HOME
+home=$HOME
 sudo mkdir -p zsh
 sudo tar -xzvf zsh.tar.gz -C zsh
 sudo cp -Rf zsh/.bashrc "$home/.bashrc"
@@ -156,26 +148,22 @@ if [ ! -d "$THEMES_DIR" ]; then
     exit 1
 fi
 
-for file in "$THEMES_DIR"/*.{xz,gz,zip}; do
-    # Check if the file exists (to avoid errors if no files match)
+for file in "$THEMES_DIR"/*.{xz,gz}; do
+
     if [ -e "$file" ]; then
         echo "Extracting $file..."
 
         case "$file" in
             *.xz)
-                # Extract .xz files
                 sudo tar -xf "$file" -C "$THEMES_DIR"
                 ;;
             *.gz)
                 sudo tar -xzf "$file" -C "$THEMES_DIR"
                 ;;
-            *.zip)
-                sudo unzip "$file" -C "$THEMES_DIR"
-                ;;
+
         esac
-        # Move the extracted folder to /usr/share/themes/
-        extracted_folder="${file%.*}"  # Remove the file extension
-        extracted_folder="${extracted_folder%.*}"  # Remove the second extension if any
+        extracted_folder="${file%.*}" 
+        extracted_folder="${extracted_folder%.*}"  
         if [ -d "$extracted_folder" ]; then
             echo "Moving $extracted_folder to /usr/share/themes/"
             sudo mv "$extracted_folder" /usr/share/themes/
@@ -186,6 +174,10 @@ for file in "$THEMES_DIR"/*.{xz,gz,zip}; do
         echo "No .xz or .gz files found in $THEMES_DIR."
     fi
 done
+
+
+sudo unzip Tokyonight-Dark-B-MB.zip -d tokyo
+sudo cp -r /themes/tokyo/* /usr/share/themes/
 
 ### Icons
 SOURCE_DIR="icons"
@@ -198,34 +190,33 @@ for file in "$SOURCE_DIR"/*.tar.gz "$SOURCE_DIR"/*.tar.xz; do
         elif [[ "$file" == *.tar.xz ]]; then
             sudo tar -xf "$file" -C /tmp/
         fi
-        sudo mv /tmp/* "$TARGET_DIR"/
+        sudo cp -rf /tmp/* "$TARGET_DIR"/
         
         sudo rm "$file"
     fi
 done
+
+pwfeedback="/etc/sudoers.d/pwfeedback"
+
+if [ -f "$pwfeedback" ]; then
+    echo "File $pwfeedback already exists. Exiting."
+    exit 1
+fi
+
+echo "Defaults pwfeedback" | sudo tee "$pwfeedback" > /dev/null
+sudo chmod 440 "$pwfeedback"
+echo "Password feedback enabled successfully."
+
+##### Change shell
+current_shell=$(echo $SHELL)
+desired_shell="/bin/bash"
+
+if [ "$current_shell" != "$desired_shell" ]; then
+    echo "Changing shell from $current_shell to $desired_shell."
+    chsh -s "$desired_shell" "$USER"
+    echo "Shell changed successfully. Please log out and log back in for the changes to take effect."
+else
+    echo "Your current shell is already set to Bash."
+fi
+
 echo "All operations completed successfully."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
