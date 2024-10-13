@@ -190,6 +190,15 @@ else
     echo "Directory $TARGET_DIR already exists."
 fi
 
+oxygen="/usr/share/icons/Oxygen"
+
+if [ ! -d "$oxygen" ]; then
+    sudo mkdir -p icons/Oxygen
+    sudo tar -xvzf icons/oxygen.tar.gz -C icons/Oxygen
+    sudo mv icons/Oxygen /usr/share/icons/
+else
+    echo "Directory $oxygen already exists."
+fi
 
 ## Pwfeedback
 pwfeedback="/etc/sudoers.d/pwfeedback"
@@ -208,9 +217,8 @@ current_shell=$(echo $SHELL)
 desired_shell="/bin/bash"
 
 if [ "$current_shell" != "$desired_shell" ]; then
-    echo "Changing shell from $current_shell to $desired_shell."
-    chsh -s "$desired_shell" "$USER"
-    echo "Shell changed successfully. Please log out and log back in for the changes to take effect."
+    chsh -s /bin/bash
+    echo "Shell changed successfully."
 else
     echo "Your current shell is already set to Bash."
 fi
