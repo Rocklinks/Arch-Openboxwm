@@ -25,7 +25,7 @@
   </placement>
   <!-- Theme -->
   <theme>
-    <name>cachyOS-nord</name>
+    <name>CachyOS</name>
     <titleLayout>NLIMC</titleLayout>
     <keepBorder>no</keepBorder>
     <animateIconify>no</animateIconify>
@@ -68,7 +68,7 @@
   </theme>
   <!-- Workspace -->
   <desktops>
-    <number>3</number>
+    <number>1</number>
     <firstdesk>0</firstdesk>
     <popupTime>0</popupTime>
     <names>
