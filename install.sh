@@ -80,8 +80,7 @@ CHAOTIC="[chaotic-aur]"
 INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
 
 if ! grep -q "$CHAOTIC" "$PACMAN"; then
-    sudo echo -e "\n$CHAOTIC\n$INCLUDE_LINE" >> "$PACMAN"
-    sudo echo "Added $CHAOTIC and $INCLUDE_LINE to $PACMAN."
+    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" | sudo tee -a "$PACMAN" > /dev/null
 else
     sudo echo "$CHAOTIC already exists in $PACMAN."
 fi
