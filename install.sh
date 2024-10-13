@@ -75,6 +75,9 @@ else
     echo "settings.ini not found at $SETTINGS_FILE"
 fi
 
+mkdir -p $HOME/.icons
+mkdir -p $HOME/.icons/default
+mv icons/default/index.theme $HOME/.config/default/
 
 sudo -v
 
