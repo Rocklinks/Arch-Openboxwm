@@ -209,4 +209,8 @@ else
     echo "Your current shell is already set to Bash."
 fi
 
+CURSOR_THEME="Oxygen Magenta"
+xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "$CURSOR_THEME"
+xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s 24
+echo "Cursor theme changed"
 echo "All operations completed successfully."
