@@ -168,6 +168,7 @@ sudo rm -rf themes/Tokyonight
 ### Icons
 kora="/usr/share/icons/kora"
 if [ ! -d "$kora" ]; then
+    sudo mkdir -p icons/kora
     sudo tar -xf icons/kora-1-6-6.tar.xz -C icons/kora
     sudo mv icons/kora/* /usr/share/icons/ 
     sudo rm icons/kora -rf
@@ -185,6 +186,8 @@ if [ ! -d "$TARGET_DIR" ]; then
 else
     echo "Directory $TARGET_DIR already exists."
 fi
+
+
 ## Pwfeedback
 pwfeedback="/etc/sudoers.d/pwfeedback"
 
@@ -209,8 +212,4 @@ else
     echo "Your current shell is already set to Bash."
 fi
 
-CURSOR_THEME="Oxygen Magenta"
-xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "$CURSOR_THEME"
-xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s 24
-echo "Cursor theme changed"
 echo "All operations completed successfully."
