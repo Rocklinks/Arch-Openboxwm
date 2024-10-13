@@ -151,22 +151,14 @@ sudo cp -rf themes/Tokyonight/* /usr/share/themes/
 sudo rm -rf themes/Tokyonight
 
 ### Icons
-SOURCE_DIR="icons"
+sudo tar -xf icons/01-Qogir.tar.xz -C icons/qogir
+sudo tar -xf icons/kora-1-6-6.tar.xz -c icons/kora
+sudo cp -rf icons/kora-1-6-6/* /usr/share/icons/
+sudo cp -rf icons/01-Qogir/* /usr/share/icons/
+sudo rm -rf icons/01-Qogir
+sudo rm -rf icons/kora-1-6-6
 
-TARGET_DIR="/usr/share/icons"
-for file in "$SOURCE_DIR"/*.tar.gz "$SOURCE_DIR"/*.tar.xz; do
-    if [[ -e "$file" ]]; then
-        if [[ "$file" == *.tar.gz ]]; then
-            sudo tar -xzf "$file" -C /tmp/
-        elif [[ "$file" == *.tar.xz ]]; then
-            sudo tar -xf "$file" -C /tmp/
-        fi
-        sudo cp -rf /tmp/* "$TARGET_DIR"/
-        
-        sudo rm "$file"
-    fi
-done
-
+## Pwfeedback
 pwfeedback="/etc/sudoers.d/pwfeedback"
 
 if [ -f "$pwfeedback" ]; then
