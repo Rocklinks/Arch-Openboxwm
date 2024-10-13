@@ -105,13 +105,15 @@ fi
 
 sudo pacman -Syu --noconfirm
 packages=(
-    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs 
-    xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox wine winetricks wine-mono wine-gecko seahorse
-    xfce4-settings xfce4-power-manager xfce4-docklike-plugin obs-studio virtualbox-guest-utils unzip
-    bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad ttf-wps-fonts localsend 
-    numlockx rofi polybar lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin
-    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent git wget curl
-   zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox xfce4-screenshooter
+    zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin
+    udiskie udisks2 tumbler gvfs xfce4-panel polkit-gnome xfdesktop blueman python-dbus
+    firefox wine winetricks wine-mono wine-gecko seahorse xfce4-settings xfce4-power-manager
+    xfce4-docklike-plugin obs-studio virtualbox-guest-utils unzip bc openbox obconf playerctl
+    xcompmgr parcellite gst-plugins-bad ttf-wps-fonts localsend numlockx rofi polybar
+    lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin zsh
+    zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent git wget curl
+    zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox
+    xfce4-screenshooter
 )
 
 # Install the packages if they are not already installed
