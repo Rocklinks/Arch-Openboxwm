@@ -151,10 +151,14 @@ sudo cp -rf themes/Tokyonight/* /usr/share/themes/
 sudo rm -rf themes/Tokyonight
 
 ### Icons
-sudo mkdir -p icons/kora
-sudo tar -xf icons/kora-1-6-6.tar.xz -C icons/kora
-sudo mv icons/kora/* /usr/share/icons/ 
-sudo rm icons/kora -rf
+kora="/usr/share/icons/kora"
+if [ ! -d "$kora" ]; then
+    sudo tar -xf icons/kora-1-6-6.tar.xz -C icons/kora
+    sudo mv icons/kora/* /usr/share/icons/ 
+    sudo rm icons/kora -rf
+else
+    echo "Directory $kora already exists."
+fi
 
 TARGET_DIR="/usr/share/icons/Qogir"
 
