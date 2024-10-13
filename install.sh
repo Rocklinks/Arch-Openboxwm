@@ -151,13 +151,21 @@ sudo cp -rf themes/Tokyonight/* /usr/share/themes/
 sudo rm -rf themes/Tokyonight
 
 ### Icons
-sudo tar -xf icons/01-Qogir.tar.xz -C icons/qogir
-sudo tar -xf icons/kora-1-6-6.tar.xz -c icons/kora
-sudo cp -rf icons/kora-1-6-6/* /usr/share/icons/
-sudo cp -rf icons/01-Qogir/* /usr/share/icons/
-sudo rm -rf icons/01-Qogir
-sudo rm -rf icons/kora-1-6-6
+sudo mkdir -p icons/kora
+sudo tar -xf icons/kora-1-6-6.tar.xz -C icons/kora
+sudo mv icons/kora/* /usr/share/icons/ 
+sudo rm icons/kora -rf
 
+TARGET_DIR="/usr/share/icons/Qogir"
+
+if [ ! -d "$TARGET_DIR" ]; then
+    sudo mkdir -p icons/qogir
+    sudo tar -xf icons/01-Qogir.tar.xz -C icons/qogir
+    sudo mv icons/qogir/* /usr/share/icons/
+    sudo rm -rf icons/qogir
+else
+    echo "Directory $TARGET_DIR already exists."
+fi
 ## Pwfeedback
 pwfeedback="/etc/sudoers.d/pwfeedback"
 
