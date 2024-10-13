@@ -89,10 +89,10 @@ sudo pacman -Syu --noconfirm
 packages=(
     zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin udiskie udisks2 tumbler gvfs 
     xfce4-panel polkit-gnome xfdesktop blueman python-dbus firefox wine winetricks wine-mono wine-gecko seahorse
-    xfce4-settings xfce4-power-manager xfce4-docklike-plugin obs-studio virtualbox-guest-utils
+    xfce4-settings xfce4-power-manager xfce4-docklike-plugin obs-studio virtualbox-guest-utils unzip
     bc openbox obconf playerctl xcompmgr parcellite gst-plugins-bad ttf-wps-fonts localsend 
     numlockx rofi polybar lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin
-    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent
+    zsh zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent git wget curl
    zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox xfce4-screenshooter
 )
 
@@ -141,42 +141,14 @@ sudo tar -xzvf zsh.tar.gz -C zsh
 sudo cp -Rf zsh/.bashrc "$home/.bashrc"
 sudo cp -Rf zsh/.zshrc "$home/.zshrc"
 ###### Themes ####
-THEMES_DIR="themes"
-if [ ! -d "$THEMES_DIR" ]; then
-    echo "Themes directory does not exist."
-    exit 1
-fi
+sudo mkdir -p themes/theme
+sudo tar -xvzf themes/CachyOS.tar.gz -C themes/theme
+sudo cp -rf themes/theme/* /usr/share/themes/
+sudo rm -rf themes/theme
 
-for file in "$THEMES_DIR"/*.{xz,gz}; do
-
-    if [ -e "$file" ]; then
-        echo "Extracting $file..."
-
-        case "$file" in
-            *.xz)
-                sudo tar -xf "$file" -C "$THEMES_DIR"
-                ;;
-            *.gz)
-                sudo tar -xzf "$file" -C "$THEMES_DIR"
-                ;;
-
-        esac
-        extracted_folder="${file%.*}" 
-        extracted_folder="${extracted_folder%.*}"  
-        if [ -d "$extracted_folder" ]; then
-            echo "Moving $extracted_folder to /usr/share/themes/"
-            sudo mv "$extracted_folder" /usr/share/themes/
-        else
-            echo "No extracted folder found for $file."
-        fi
-    else
-        echo "No .xz or .gz files found in $THEMES_DIR."
-    fi
-done
-
-
-sudo unzip Tokyonight-Dark-B-MB.zip -d tokyo
-sudo cp -r /themes/tokyo/* /usr/share/themes/
+sudo unzip themes/Tokyonight-Dark-B-MB.zip -d themes/
+sudo cp -rf themes/Tokyonight/* /usr/share/themes/
+sudo rm -rf themes/Tokyonight
 
 ### Icons
 SOURCE_DIR="icons"
