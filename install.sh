@@ -60,6 +60,21 @@ else
     echo "No active network interfaces found."
 fi
 
+TARGET_DIR="$HOME/.config/gtk-3.0"
+SETTINGS_FILE="settings.ini" 
+
+if [ ! -d "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+    echo "Created directory: $TARGET_DIR"
+fi
+
+if [ -f "$SETTINGS_FILE" ]; then
+    mv "$SETTINGS_FILE" "$TARGET_DIR/"
+    echo "Moved settings.ini to $TARGET_DIR"
+else
+    echo "settings.ini not found at $SETTINGS_FILE"
+fi
+
 
 sudo -v
 
