@@ -146,7 +146,7 @@ sudo tar -xvzf themes/CachyOS.tar.gz -C themes/theme
 sudo cp -rf themes/theme/* /usr/share/themes/
 sudo rm -rf themes/theme
 
-sudo unzip themes/Tokyonight-Dark-B-MB.zip -d themes/
+sudo unzip themes/Tokyonight-Dark-B-MB.zip -d themes/Tokyonight
 sudo cp -rf themes/Tokyonight/* /usr/share/themes/
 sudo rm -rf themes/Tokyonight
 
