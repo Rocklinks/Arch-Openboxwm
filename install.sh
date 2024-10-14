@@ -79,6 +79,8 @@ mkdir -p $HOME/.icons
 mkdir -p $HOME/.icons/default
 mv icons/default/index.theme $HOME/.config/default/
 
+mv zsh/bashrc $HOME/.bashrc
+mv zsh/zshrc $HOME/.zshrc
 sudo -v
 
 ###### Check if yay is installed ###############
@@ -154,12 +156,6 @@ xdm=https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-
 wget $xdm
 sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
 sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
-# optional
-home=$HOME
-sudo mkdir -p zsh
-sudo tar -xzvf zsh.tar.gz -C zsh
-sudo cp -Rf zsh/.bashrc "$home/.bashrc"
-sudo cp -Rf zsh/.zshrc "$home/.zshrc"
 ###### Themes ####
 sudo mkdir -p themes/theme
 sudo tar -xvzf themes/CachyOS.tar.gz -C themes/theme
