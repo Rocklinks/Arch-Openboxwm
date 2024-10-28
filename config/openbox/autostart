@@ -39,9 +39,9 @@ exec /usr/lib/nvidia-prime-applet/nvidia-prime &
 
 exec xdman --background &
 
-exec ~/.config/polybar/scripts/bat.sh &
+exec ~/.config/polybar/scripts/battery.sh &
 
 ## Polkit-Gnome ##
-exec //usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 "$HOME"/.config/openbox/autostart
