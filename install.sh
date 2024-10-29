@@ -60,25 +60,6 @@ else
     echo "No active network interfaces found."
 fi
 
-TARGET_DIR="$HOME/.config/gtk-3.0"
-SETTINGS_FILE="settings.ini" 
-
-if [ ! -d "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR"
-    echo "Created directory: $TARGET_DIR"
-fi
-
-if [ -f "$SETTINGS_FILE" ]; then
-    mv "$SETTINGS_FILE" "$TARGET_DIR/"
-    echo "Moved settings.ini to $TARGET_DIR"
-else
-    echo "settings.ini not found at $SETTINGS_FILE"
-fi
-
-mkdir -p $HOME/.icons
-mkdir -p $HOME/.icons/default
-mv icons/default/index.theme $HOME/.config/default/
-
 mv zsh/bashrc $HOME/.bashrc
 mv zsh/zshrc $HOME/.zshrc
 sudo -v
@@ -115,7 +96,7 @@ packages=(
     lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin zsh
     zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent git wget curl
     zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox
-    xfce4-screenshooter
+    xfce4-screenshooter xdg-desktop-portal-gtk
 )
 
 # Install the packages if they are not already installed
