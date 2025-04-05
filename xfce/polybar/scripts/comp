@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Check if XFWM4 compositor is enabled
+is_enabled=$(xfconf-query -c xfwm4 -p /general/use_compositing)
+
+# Print icon for Polybar without toggling
+if [ "$1" = "status" ]; then
+    if [ "$is_enabled" = "true" ]; then
+        echo ""
+    else
+        echo "" 
+    fi
+    exit 0
+fi
+
+# Toggle compositor only on click
+xfconf-query -c xfwm4 -p /general/use_compositing -T
+

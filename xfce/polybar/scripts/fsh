@@ -1,0 +1,27 @@
+#!/bin/bash
+
+BAR_NAME="polybar"  # Or change to your bar instance name if using custom
+
+monitor_fullscreen() {
+  while :; do
+    # Get the active window ID
+    active_win_id=$(xprop -root _NET_ACTIVE_WINDOW | awk -F ' ' '{print $5}')
+    
+    # Skip if not found
+    [ "$active_win_id" = "0x0" ] && sleep 1 && continue
+
+    # Get the fullscreen state
+    fullscreen=$(xprop -id "$active_win_id" _NET_WM_STATE | grep _NET_WM_STATE_FULLSCREEN)
+
+    if [ -n "$fullscreen" ]; then
+      polybar-msg cmd hide
+    else
+      polybar-msg cmd show
+    fi
+
+    sleep 1
+  done
+}
+
+monitor_fullscreen
+

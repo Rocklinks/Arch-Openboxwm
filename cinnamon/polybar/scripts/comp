@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Get current muffin experimental features
+features=$(gsettings get org.cinnamon.muffin experimental-features)
+
+# Function to check if "no-compositing" is present
+compositor_off=$(echo "$features" | grep -q "no-compositing" && echo true || echo false)
+
+# If called with 'status', print icon only
+if [ "$1" = "status" ]; then
+    if [ "$compositor_off" = "true" ]; then
+        echo ""  # Eye-slash icon
+    else
+        echo ""  # Eye icon
+    fi
+    exit 0
+fi
+
+# Toggle compositing
+if [ "$compositor_off" = "true" ]; then
+    # Remove no-compositing
+    new_features=$(echo "$features" | sed 's/"no-compositing",* *//g' | sed 's/, *]/]/')
+    gsettings set org.cinnamon.muffin experimental-features "$new_features"
+else
+    # Add no-compositing
+

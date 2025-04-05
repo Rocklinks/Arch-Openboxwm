@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Polybar module name (must match the one in config.ini)
+POLYBAR_MODULE="compositor"
+
+# Check if XFWM4 compositor is enabled
+is_enabled=$(xfconf-query -c xfwm4 -p /general/use_compositing)
+
+# Print icon for Polybar without toggling
+if [ "$1" = "status" ]; then
+    if [ "$is_enabled" = "true" ]; then
+        echo ""  # Compositor enabled
+    else
+        echo ""  # Compositor disabled
+    fi
+    exit 0
+fi
+
+# Toggle compositor only on click
+xfconf-query -c xfwm4 -p /general/use_compositing -T
+
+# Wait a moment to let the setting apply
+sleep 0.2
+
+# Refresh Polybar module so the icon updates
+polybar-msg hook "$POLYBAR_MODULE" 1
+
