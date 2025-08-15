@@ -53,6 +53,7 @@ Wallpapers: Set high-res, minimal backgrounds. Check out [devianArt] or Unsplash
 
     Automate & Tweak: Personalize Openbox keybinds, menus, and autostart for efficient workflows.
 
+![My openbox wm Desktop Preview](./desk.png)
 🚀 Usage & Tips
 
     Configure Openbox visually: obconf and lxappearance
