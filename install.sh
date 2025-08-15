@@ -1,205 +1,171 @@
 #!/bin/bash
-########################
+#
 # Author: Rocklin K S
 # Date: 13/08/2024
-# This script makes my config to autinstall
-# Version: v3
-############################
+# Version: v4-refined
+# Purpose: Automated config installation for Arch Linux
+#
 
-set -exo  pipefail
+set -euo pipefail
+
+# ---- Helper Functions ----
+log() { echo -e "\e[92m[+] $1\e[0m"; }
+warn() { echo -e "\e[93m[!] $1\e[0m"; }
+error() { echo -e "\e[91m[-] $1\e[0m" >&2; }
+
+# ---- 1. Copy Base Configurations ----
+log "Copying base configuration files..."
 mkdir -p "$HOME/.config"
-cp -rf config/networkmanager-dmenu config/openbox config/xfce4 "$HOME/.config/"
+cp -rf config/{networkmanager-dmenu,openbox,xfce4} "$HOME/.config/"
 
 copy_normal_polybar() {
     cp -rf config/polybar "$HOME/.config/"
-    echo "Normal Polybar configuration copied to ~/.config"
+    log "Normal Polybar configuration installed."
 }
 
 copy_transparent_polybar() {
-    mv -f config/polybar-transparent "$HOME/.config/polybar"
-    echo "Transparent Polybar configuration copied to ~/.config/polybar"
+    rm -rf "$HOME/.config/polybar"
+    cp -rf config/polybar-transparent "$HOME/.config/polybar"
+    log "Transparent Polybar configuration installed."
 }
 
 echo "Select Polybar version:"
 echo "1. Normal"
 echo "2. Transparent"
-read -p "Enter your choice (1 or 2): " choice
-
-case $choice in
-    1)
-        copy_normal_polybar
-        ;;
-    2)
-        copy_transparent_polybar
-        ;;
-    *)
-        echo "Invalid choice. Please select 1 or 2."
-        ;;
+read -rp "Enter choice (1/2): " choice
+case "$choice" in
+    1) copy_normal_polybar ;;
+    2) copy_transparent_polybar ;;
+    *) warn "Invalid choice — defaulting to normal."; copy_normal_polybar ;;
 esac
 
-# Change permissions for polybar scripts
-chmod +x "$HOME/.config/polybar/scripts/"*
+chmod +x "$HOME/.config/polybar/scripts/"* || warn "No polybar scripts found to chmod."
+
 SYSTEM_CONFIG="$HOME/.config/polybar/system.ini"
 POLYBAR_CONFIG="$HOME/.config/polybar/config.ini"
 
-# Get the active Ethernet and Wi-Fi interfaces
-ETHERNET=$(ip link | awk '/state UP/ && !/wl/ {print $2}' | tr -d :)
-WIFI=$(ip link | awk '/state UP/ && /wl/ {print $2}' | tr -d :)
+# ---- 2. Network Interface Detection ----
+log "Detecting active network interface..."
+ETHERNET=$(ip -o link | awk -F': ' '!/wl/ && /state UP/ {print $2; exit}')
+WIFI=$(ip -o link | awk -F': ' '/wl/ && /state UP/ {print $2; exit}')
 
-# Check if Wi-Fi is active
 if [ -n "$WIFI" ]; then
-    echo "Using Wi-Fi interface: $WIFI"
-    sed -i "s/sys_network_interface = wlan0/sys_network_interface = $WIFI/" "$SYSTEM_CONFIG"
-    
+    log "Wi-Fi interface found: $WIFI"
+    sed -i "s|sys_network_interface = .*|sys_network_interface = $WIFI|" "$SYSTEM_CONFIG"
 elif [ -n "$ETHERNET" ]; then
-    echo "Using Ethernet interface: $ETHERNET"
-    sed -i "s/sys_network_interface = wlan0/sys_network_interface = $ETHERNET/" "$SYSTEM_CONFIG"
-    sed -i "s/network/ethernet/g" "$POLYBAR_CONFIG"
-
+    log "Ethernet interface found: $ETHERNET"
+    sed -i "s|sys_network_interface = .*|sys_network_interface = $ETHERNET|" "$SYSTEM_CONFIG"
+    sed -i 's/network/ethernet/g' "$POLYBAR_CONFIG"
 else
-    echo "No active network interfaces found."
+    warn "No active network interfaces found — Polybar network module may not work."
 fi
 
-mv zsh/bashrc $HOME/.bashrc
-mv zsh/zshrc $HOME/.zshrc
-sudo -v
+# ---- 3. Shell Configs ----
+[ -f zsh/bashrc ] && mv zsh/bashrc "$HOME/.bashrc"
+[ -f zsh/zshrc ] && mv zsh/zshrc "$HOME/.zshrc"
 
-###### Check if yay is installed ###############
-if ! command -v yay &> /dev/null; then
-    sudo pacman -S yay --noconfirm
+# ---- 4. Install Yay ----
+log "Checking for yay..."
+if ! command -v yay &>/dev/null; then
+    log "Installing yay from AUR..."
+    sudo pacman -Sy --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    cd /tmp/yay && makepkg -si --noconfirm
+    cd - >/dev/null
+else
+    log "yay is already installed."
 fi
 
+# ---- 5. Add Chaotic AUR ----
 if ! grep -q "chaotic-aur" /etc/pacman.conf; then
-   sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-   sudo pacman-key --lsign-key 3056513887B78AEB
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
-   sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
-fi
-
-PACMAN="/etc/pacman.conf"
-CHAOTIC="[chaotic-aur]"
-INCLUDE_LINE="Include = /etc/pacman.d/chaotic-mirrorlist"
-
-if ! grep -q "$CHAOTIC" "$PACMAN"; then
-    echo -e "\n$CHAOTIC\n$INCLUDE_LINE" | sudo tee -a "$PACMAN" > /dev/null
+    log "Adding Chaotic AUR..."
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
+    echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf >/dev/null
 else
-    sudo echo "$CHAOTIC already exists in $PACMAN."
+    log "Chaotic AUR already set up."
 fi
 
-sudo pacman -Syu --noconfirm
+# ---- 6. Package Installation ----
+log "Installing packages..."
 packages=(
     zramswap preload python-dbus xarchiver xed thunar thunar-volman thunar-archive-plugin
-    udiskie udisks2 tumbler gvfs xfce4-panel polkit-gnome xfdesktop blueman python-dbus
+    udiskie udisks2 tumbler gvfs xfce4-panel polkit-gnome xfdesktop blueman
     firefox wine winetricks wine-mono wine-gecko seahorse xfce4-settings xfce4-power-manager
-    xfce4-docklike-plugin obs-studio virtualbox-guest-utils unzip bc openbox obconf playerctl
+    obs-studio virtualbox-guest-utils unzip bc openbox obconf playerctl
     xcompmgr parcellite gst-plugins-bad ttf-wps-fonts localsend numlockx rofi polybar
     lxappearance gst-plugins-base tlp tlp-rdw tlpui visual-studio-code-bin zsh
     zsh-syntax-highlighting zsh-autosuggestions gst-plugins-ugly qbittorrent git wget curl
     zsh-history-substring-search zsh-completions gst-plugins-good wps-office virtualbox
     xfce4-screenshooter xdg-desktop-portal-gtk
 )
-
-# Install the packages if they are not already installed
-for package in "${packages[@]}"; do
-    if ! pacman -Q "$package" &> /dev/null; then
-        sudo pacman -S "$package" --noconfirm
+for pkg in "${packages[@]}"; do
+    if ! pacman -Q "$pkg" &>/dev/null; then
+        sudo pacman -S "$pkg" --noconfirm
     else
-        echo "$package is already installed. Skipping."
+        echo "✔ $pkg already installed."
     fi
 done
-##Services to Enbale
-enable_service() {
-    local service_name=$1
-    sudo systemctl enable "$service_name"
-}
 
-enable_service bluetooth
-enable_service tlp
-enable_service preload
-enable_service zramswap
+# ---- 7. Enable Services ----
+log "Enabling services..."
+for svc in bluetooth tlp preload zramswap; do
+    sudo systemctl enable "$svc"
+done
 
-sudo cp -rf udev/rules.d/90-backlight.rules /etc/udev/rules.d/
-# Rules for the brightness
-USERNAME=$(whoami)
-sudo sed -i "s/\$USER/$USERNAME/g" /etc/udev/rules.d/90-backlight.rules
-
+# ---- 8. Fonts ----
+log "Installing custom fonts..."
 sudo mkdir -p Fonts
-sudo tar -xzvf Fonts.tar.gz -C Fonts
-sudo cp -rf Fonts/ /usr/share/fonts/
+sudo tar -xzf Fonts.tar.gz -C Fonts
+sudo cp -rf Fonts/* /usr/share/fonts/
 sudo fc-cache -fv
+rm -rf Fonts
 
-stacer=http://archlinuxgr.tiven.org/archlinux/x86_64/stacer-1.1.0-1-x86_64.pkg.tar.zst
-wget $stacer
-sudo pacman -U stacer-1.1.0-1-x86_64.pkg.tar.zst --noconfirm
-sudo rm -rf stacer-1.1.0-1-x86_64.pkg.tar.zst
+# ---- 9. Themes ----
+log "Installing themes..."
+sudo tar -xvzf themes/CachyOS.tar.gz -C /usr/share/themes/
+sudo unzip -q themes/Tokyonight-Dark-B-MB.zip -d /usr/share/themes/Tokyonight
 
-xdm=https://github.com/subhra74/xdm/releases/download/8.0.29/xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
-wget $xdm
-sudo pacman -U xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst --noconfirm
-sudo rm -rf xdman_gtk-8.0.29-1-x86_64.pkg.tar.zst
-###### Themes ####
-sudo mkdir -p themes/theme
-sudo tar -xvzf themes/CachyOS.tar.gz -C themes/theme
-sudo cp -rf themes/theme/* /usr/share/themes/
-sudo rm -rf themes/theme
+# ---- 10. Icons ----
+log "Installing icons..."
+install_icon_set() {
+    local dir=$1
+    local archive=$2
+    if [ ! -d "/usr/share/icons/$dir" ]; then
+        tar_opts="-xf"
+        [[ $archive == *.tar.gz ]] && tar_opts="-xvzf"
+        [[ $archive == *.tar.xz ]] && tar_opts="-xf"
+        [[ $archive == *.zip ]] && { unzip -q "icons/$archive" -d "icons/$dir" && sudo mv icons/$dir/* /usr/share/icons/ && rm -rf icons/$dir; return; }
+        sudo mkdir -p icons/$dir
+        sudo tar $tar_opts "icons/$archive" -C icons/$dir
+        sudo mv icons/$dir/* /usr/share/icons/
+        sudo rm -rf icons/$dir
+    else
+        log "Icon set $dir already exists."
+    fi
+}
+install_icon_set kora kora-1-6-6.tar.xz
+install_icon_set Qogir 01-Qogir.tar.xz
+install_icon_set Oxygen oxygen.tar.gz
 
-sudo unzip themes/Tokyonight-Dark-B-MB.zip -d themes/Tokyonight
-sudo cp -rf themes/Tokyonight/* /usr/share/themes/
-sudo rm -rf themes/Tokyonight
-
-### Icons
-kora="/usr/share/icons/kora"
-if [ ! -d "$kora" ]; then
-    sudo mkdir -p icons/kora
-    sudo tar -xf icons/kora-1-6-6.tar.xz -C icons/kora
-    sudo mv icons/kora/* /usr/share/icons/ 
-    sudo rm icons/kora -rf
+# ---- 11. pwfeedback ----
+pwfile="/etc/sudoers.d/pwfeedback"
+if [ ! -f "$pwfile" ]; then
+    echo "Defaults pwfeedback" | sudo tee "$pwfile" >/dev/null
+    sudo chmod 440 "$pwfile"
+    log "Password feedback enabled."
 else
-    echo "Directory $kora already exists."
+    log "pwfeedback already enabled."
 fi
 
-TARGET_DIR="/usr/share/icons/Qogir"
-
-if [ ! -d "$TARGET_DIR" ]; then
-    sudo mkdir -p icons/qogir
-    sudo tar -xf icons/01-Qogir.tar.xz -C icons/qogir
-    sudo mv icons/qogir/* /usr/share/icons/
-    sudo rm -rf icons/qogir
-else
-    echo "Directory $TARGET_DIR already exists."
-fi
-
-oxygen="/usr/share/icons/Oxygen"
-
-if [ ! -d "$oxygen" ]; then
-    sudo mkdir -p icons/Oxygen
-    sudo tar -xvzf icons/oxygen.tar.gz -C icons/Oxygen
-    sudo mv icons/Oxygen /usr/share/icons/
-else
-    echo "Directory $oxygen already exists."
-fi
-
-## Pwfeedback
-pwfeedback="/etc/sudoers.d/pwfeedback"
-
-if [ -f "$pwfeedback" ]; then
-    echo "File $pwfeedback already exists. Exiting."
-    exit 1
-fi
-
-echo "Defaults pwfeedback" | sudo tee "$pwfeedback" > /dev/null
-sudo chmod 440 "$pwfeedback"
-echo "Password feedback enabled successfully."
-
-##### Change shell
-current_shell=$(echo $SHELL)
-desired_shell="/bin/bash"
-
-if [ "$current_shell" != "$desired_shell" ]; then
+# ---- 12. Change Shell to Bash ----
+if [ "$SHELL" != "/bin/bash" ]; then
     chsh -s /bin/bash
-    echo "Shell changed successfully."
+    log "Shell changed to Bash."
 else
-    echo "Your current shell is already set to Bash."
+    log "Already using Bash shell."
 fi
 
-echo "All operations completed successfully."
+log "✅ All operations completed successfully!"
